@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ public class StacksBar : MonoBehaviour
     [SerializeField] GameObject stackPrefab;
 
     List<Stack> stacks = new List<Stack>();
+    
     #endregion
 
     #region Getters
@@ -30,8 +32,14 @@ public class StacksBar : MonoBehaviour
             var stack = Instantiate(stackPrefab, spawnPoint, Quaternion.identity).GetComponent<Stack>();
             stack.Build();
             stacks.Add(stack);
-            stack.IdlePosition = stackPoints[i].position;
+            stack.SetIdlePosition(stackPoints[i].position);
             yield return new WaitForSeconds(0.3f);
         }
+    }
+
+    public void RemoveStack(Stack stack)
+    {
+        stacks.Remove(stack);
+        if(stacks.Count == 0) RefreshBar();
     }
 }

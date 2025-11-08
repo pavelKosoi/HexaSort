@@ -5,7 +5,8 @@ public class GameManager : Singleton<GameManager>
 {
 
     #region Fields
-    [SerializeField] private StacksBar stacksBar;
+    [SerializeField] StacksBar stacksBar;
+    [SerializeField] HexStackAnimator animator;
     #endregion
     #region Properties
     public StateMachine StateMachine { get; private set; }
@@ -14,6 +15,7 @@ public class GameManager : Singleton<GameManager>
 
     #region Getters
     public StacksBar StacksBar => stacksBar;
+    public HexStackAnimator HexStackAnimator => animator;
     #endregion
 
     #region UnityMethodes

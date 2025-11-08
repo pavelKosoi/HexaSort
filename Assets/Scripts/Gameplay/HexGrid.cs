@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class HexGrid : MonoBehaviour
@@ -7,6 +8,17 @@ public class HexGrid : MonoBehaviour
     BaseHexCell[] cells;
     Dictionary<Vector2Int, BaseHexCell> cellMap = new();
     List<BaseHexCell> lastNeighbors = new List<BaseHexCell>();
+    readonly List<BaseHexCell> tempNeighbors = new(6);
+    readonly Vector2Int[] neighborDirs = new Vector2Int[]
+    {
+        new(1, 0), new(1, -1), new(0, -1),
+        new(-1, 0), new(-1, 1), new(0, 1)
+    };
+    #endregion
+
+    #region Getters
+    float hexRadius => ConfigsManager.Instance.GamePropertiesConfig.DefaultHexRadius;
+    public BaseHexCell[] AllCells => cells;
     #endregion
 
     #region UnityMethodes
@@ -37,9 +49,10 @@ public class HexGrid : MonoBehaviour
     {
         foreach (var cell in cells)
         {
-            Vector2Int axial = WorldToHexFlatTop(transform.TransformPoint(cell.transform.position), 0.5f);
+            Vector2Int axial = WorldToHexFlatTop(transform.TransformPoint(cell.transform.position), hexRadius);               
+
             cellMap[axial] = cell;
-            cell.SetCoords(axial.x, axial.y);
+            cell.SetCoords(axial);
             cell.name = $"Hex ({axial.x},{axial.y})";
         }
     }
@@ -82,6 +95,8 @@ public class HexGrid : MonoBehaviour
     }
     #endregion
 
+
+    #region CellsManagement
     public List<BaseHexCell> GetNeighbors(BaseHexCell cell)
     {
         var dirs = new Vector2Int[]
@@ -93,11 +108,67 @@ public class HexGrid : MonoBehaviour
         List<BaseHexCell> neighbors = new();
         foreach (var dir in dirs)
         {
-            Vector2Int neighborPos = new Vector2Int(cell.coords.x + dir.x, cell.coords.y + dir.y);
+            Vector2Int neighborPos = new Vector2Int(cell.Coordinates.x + dir.x, cell.Coordinates.y + dir.y);
             if (cellMap.TryGetValue(neighborPos, out var neighbor))
                 neighbors.Add(neighbor);
         }
-        lastNeighbors = neighbors;
+       // lastNeighbors = neighbors;
         return neighbors;
-    }  
+    }
+    public void GetNeighbors(Vector2Int coords, List<BaseHexCell> buffer)
+    {
+        for (int i = 0; i < neighborDirs.Length; i++)
+        {
+            Vector2Int neighborPos = coords + neighborDirs[i];
+            if (cellMap.TryGetValue(neighborPos, out var neighbor))
+                buffer.Add(neighbor);
+        }
+    }
+
+
+    public (BaseHexCell, bool) GetNearestCell(Vector3 position)
+    {
+        Vector2Int axial = WorldToHexFlatTop(position, 0.5f);
+
+        if (cellMap.TryGetValue(axial, out var exactCell))
+        {
+            bool inside = IsPointInsideHex(position, exactCell.transform.position, 0.5f);
+            return (exactCell, inside);
+        }
+
+        tempNeighbors.Clear();
+        GetNeighbors(axial, tempNeighbors);
+
+        float bestDist = float.MaxValue;
+        BaseHexCell nearest = null;
+
+        for (int i = 0; i < tempNeighbors.Count; i++)
+        {
+            var cell = tempNeighbors[i];
+            float dist = (cell.transform.position - position).sqrMagnitude;
+            if (dist < bestDist)
+            {
+                bestDist = dist;
+                nearest = cell;
+            }
+        }
+
+        if (nearest == null)
+            return (null, false);
+
+        bool insideNearest = IsPointInsideHex(position, nearest.transform.position, 0.5f);
+        return (nearest, insideNearest);
+    }
+   
+
+    bool IsPointInsideHex(Vector3 point, Vector3 center, float radius)
+    {
+        Vector3 local = point - center;
+        float q2x = Mathf.Abs(local.x) * 0.57735f; // sqrt(3)/3
+        float q2y = Mathf.Abs(local.z);
+
+        return (q2x + q2y <= radius);
+    }
+    #endregion
+
 }

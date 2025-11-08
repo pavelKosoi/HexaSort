@@ -1,18 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
-public class HexView : Poolable
+public class HexView : MonoBehaviour
 {
     Material material;
 
-    public override void Init()
+    public bool Inited {  get; private set; }
+
+    private void Awake()
     {
-        var renderer = GetComponentInChildren<MeshRenderer>();
+        Init();
+    }
+
+    void Init()
+    {
+        var renderer = GetComponent<MeshRenderer>();
         material = new Material(renderer.material);
         renderer.material = material;
-
-        base.Init();
+        Inited = true;
     }
 
     public void SetColor(Color color) => StartCoroutine(SetColorRoutine(color));
@@ -21,5 +28,4 @@ public class HexView : Poolable
         yield return new WaitWhile(() => !Inited);
         material.color = color;
     }
-
 }

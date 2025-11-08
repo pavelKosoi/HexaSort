@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: GamePropertiesConfig
   m_EditorClassIdentifier: 
   defaultHexThickness: 0.05
+  defaultHexRadius: 0.5
   maxStackHeight: 12
   minStackHeight: 5
-  maxColorsInStack: 3
-  minColorsInStack: 2
+  maxColorsInStack: 2
+  minColorsInStack: 1
+  stackTargetHeight: 15
   hexPrefab: {fileID: 3409067334823398297, guid: 44338c61a83fd234ca687d94a4fb642b, type: 3}

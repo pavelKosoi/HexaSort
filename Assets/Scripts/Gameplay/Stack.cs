@@ -1,26 +1,35 @@
 ﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
+using Random = UnityEngine.Random;
 
 public class Stack : MonoBehaviour, IDragAndDropable
 {
     #region Fields
     [SerializeField] CapsuleCollider m_collider;
 
-    List<HexView> hexes = new List<HexView>();
-    private StateMachine stateMachine;
+    List<Hex> hexes = new List<Hex>();
+    StateMachine stateMachine;
+    BaseHexCell lastSelectedCell;
+    BaseHexCell cell;
+
     #endregion
 
     #region Properties
     public Vector3 TargetPosition { get; private set; }
-    public Vector3 IdlePosition { get; set; }
+    public Vector3 IdlePosition { get; private set; }
+    public Vector3 PlacedPosition { get; private set; }
 
     #endregion
 
     #region Getters 
-    public List<HexView> Hexes => hexes;
+    public List<Hex> Hexes => hexes;
+    public Color UpperColor => hexes[hexes.Count - 1].Color;
+    HexGrid grid => GameManager.Instance.CurrentLevel.HexGrid;
     #endregion
 
     #region UnityMethodes
@@ -41,11 +50,13 @@ public class Stack : MonoBehaviour, IDragAndDropable
     private void Update()
     {
         stateMachine.Update();
-    }
+    } 
 
     #endregion
 
     #region Build
+    public void SetIdlePosition(Vector3 position) => IdlePosition = position;
+
     public void Build()
     {
         var gamePropertiesconfig = ConfigsManager.Instance.GamePropertiesConfig;
@@ -56,7 +67,7 @@ public class Stack : MonoBehaviour, IDragAndDropable
             var newHex = ObjectPool.Instance.GetFromPool(ObjectPool.PoolObjectType.Hex, transform.position + Vector3.up *
                 i * gamePropertiesconfig.DefaultHexThickness);
             newHex.transform.SetParent(transform);
-            hexes.Add(newHex.GetComponent<HexView>());
+            hexes.Add(newHex.GetComponent<Hex>());
         }
 
         Vector3 start = hexes[0].transform.position;
@@ -72,7 +83,7 @@ public class Stack : MonoBehaviour, IDragAndDropable
         AssignColorsToStack(hexes, colors);
 
     }
-    void AssignColorsToStack(List<HexView> hexes, Color[] colors)
+    void AssignColorsToStack(List<Hex> hexes, Color[] colors)
     {
         int total = hexes.Count;
        
@@ -107,6 +118,7 @@ public class Stack : MonoBehaviour, IDragAndDropable
                 if (hexIndex >= hexes.Count) return;
 
                 hexes[hexIndex].SetColor(colors[i]);
+                //hexes[hexIndex].SetColor(Color.blue);
 
                 hexIndex++;
             }
@@ -124,17 +136,98 @@ public class Stack : MonoBehaviour, IDragAndDropable
     public void OnDrag(Vector3 position)
     {
         TargetPosition = position;
+        var nearestCell = grid.GetNearestCell(TargetPosition);
+        if (nearestCell.Item1 != null && nearestCell.Item2)
+        {
+            if (!nearestCell.Item1.IsOccupied && nearestCell.Item1 != lastSelectedCell)
+            {
+                if(lastSelectedCell != null) lastSelectedCell.SetDefaultColor();
+                nearestCell.Item1.SetSelectedColor();
+                lastSelectedCell = nearestCell.Item1;
+            }
+        }
+        else if (lastSelectedCell != null)
+        {
+            lastSelectedCell.SetDefaultColor();
+            lastSelectedCell= null;
+        }
     }
 
     public void OnDrop()
     {
-        HexGrid grid = GameManager.Instance.CurrentLevel.HexGrid;
-
-
+        var nearestCell = grid.GetNearestCell(TargetPosition);
+        if (nearestCell.Item1 != null)
+        {
+            if (nearestCell.Item2 && !nearestCell.Item1.IsOccupied)
+            {               
+                PlacedPosition = nearestCell.Item1.transform.position + Vector3.up * ConfigsManager.Instance.GamePropertiesConfig.DefaultHexThickness;
+                cell = nearestCell.Item1;
+                nearestCell.Item1.Occupy(this);
+                nearestCell.Item1.SetDefaultColor();
+                stateMachine.ChangeState<StackPlacedState>();
+            }
+            else stateMachine.ChangeState<StackIdleState>();
+        }        
+        else stateMachine.ChangeState<StackIdleState>();
 
         TargetPosition = Vector3.zero;
-        stateMachine.ChangeState<StackIdleState>();
-    }
+        lastSelectedCell = null;
+    }    
     
+    public void OnStackPlaced()
+    {
+        GameManager.Instance.CurrentLevel.CheckAllMatches();
+    }
+
+    #endregion
+
+    #region Management
+
+    public int GetColorGroupCount()
+    {
+        int groups = 1;
+        for (int i = 1; i < Hexes.Count; i++)
+        {
+            if (Hexes[i].Color != Hexes[i - 1].Color) groups++;
+        }
+        return groups;
+    }
+
+
+
+    public void TryToDestroy()
+    {
+        if (hexes.Count == 0)
+        {
+            cell.Vacate();
+            Destroy(gameObject);
+        }       
+    }
+    public void TryToPop()
+    {
+        if (hexes.Count >= ConfigsManager.Instance.GamePropertiesConfig.StackTargetHeight
+            && hexes.All(h => h.Color == UpperColor))
+        {
+            StartCoroutine(PopStack());
+        }
+    }
+
+    IEnumerator PopStack()
+    {
+        cell.Vacate();
+
+        var sortedHexes = hexes.OrderByDescending(h => h.transform.position.y).ToList();
+
+        foreach (var item in sortedHexes)
+        {
+            item.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.OutQuint).OnComplete(() =>
+            {
+                item.ReturnToPool();
+            });
+            yield return new WaitForSeconds(0.5f / sortedHexes.Count);
+        }
+        Destroy(gameObject);
+    }
+
     #endregion
 }
