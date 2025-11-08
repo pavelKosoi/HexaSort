@@ -6,21 +6,46 @@ using UnityEngine;
 
 public class Level : MonoBehaviour
 {
+    #region Fields
+
     MatchSelector matchSelector;
     Coroutine matchRoutine;
+    int points;    
 
     public Action OnLevelComplete;
     public Action OnLevelFailed;
+    public static Action<float> OnLevelProgressChanged;
+    #endregion
 
+    #region Properties
     public HexGrid HexGrid {  get; private set; }
 
+    #endregion
 
+    #region UnityMethodes
     private void Awake()
     {
         HexGrid = GetComponentInChildren<HexGrid>();
         matchSelector = new MatchSelector(HexGrid);
 
     }
+    #endregion
+
+    #region PropgressManagement
+
+    public void AddPoints(int amount)
+    {
+        points += amount;
+        OnLevelProgressChanged?.Invoke(points);
+        if (points >= GameManager.Instance.CurrentLevelConfig.TargetPoints)
+        {
+            OnLevelComplete?.Invoke();
+        }
+    }
+
+    #endregion
+
+    #region MatchesChecking
 
     public void CheckAllMatches()
     {
@@ -70,40 +95,13 @@ public class Level : MonoBehaviour
 
         } while (hasMatches);
 
+        if (HexGrid.AllCellsFilled)
+        {            
+            OnLevelFailed?.Invoke();
+        }
+
         matchRoutine = null;
     }
-
-
-
-    public (Stack from, Stack to)? FindBestMatchPair(BaseHexCell cell)
-    {
-        var stack = cell.OccupiedBy;
-        if (stack == null) return null;
-
-        var neighbors = HexGrid.GetNeighbors(cell).Where(n => n.IsOccupied)
-            .Select(n => n.OccupiedBy).Where(s => s.UpperColor == stack.UpperColor).ToList();
-
-        if (neighbors.Count == 0) return null;
-
-        var bestPair = neighbors
-            .Select(neighbor =>
-            {
-                int fromGroups = stack.GetColorGroupCount();
-                int toGroups = neighbor.GetColorGroupCount();
-
-                if (fromGroups == toGroups)
-                {
-                    fromGroups = stack.Hexes.Count;
-                    toGroups = neighbor.Hexes.Count;
-                }
-
-                return fromGroups > toGroups ? (from: stack, to: neighbor) : (from: neighbor, to: stack);
-
-            })
-            .OrderBy(pair => pair.to.GetColorGroupCount())
-            .FirstOrDefault();
-
-        return bestPair;
-    }
+    #endregion
 
 }

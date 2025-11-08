@@ -19,6 +19,7 @@ public class HexGrid : MonoBehaviour
     #region Getters
     float hexRadius => ConfigsManager.Instance.GamePropertiesConfig.DefaultHexRadius;
     public BaseHexCell[] AllCells => cells;
+    public bool AllCellsFilled => cells.All(c => c.IsOccupied);
     #endregion
 
     #region UnityMethodes
@@ -97,7 +98,7 @@ public class HexGrid : MonoBehaviour
 
 
     #region CellsManagement
-    public List<BaseHexCell> GetNeighbors(BaseHexCell cell)
+    public List<BaseHexCell> GetNeighbors(BaseHexCell cell, bool drawNeighbors = false)
     {
         var dirs = new Vector2Int[]
         {
@@ -112,7 +113,7 @@ public class HexGrid : MonoBehaviour
             if (cellMap.TryGetValue(neighborPos, out var neighbor))
                 neighbors.Add(neighbor);
         }
-       // lastNeighbors = neighbors;
+       if(drawNeighbors) lastNeighbors = neighbors;
         return neighbors;
     }
     public void GetNeighbors(Vector2Int coords, List<BaseHexCell> buffer)

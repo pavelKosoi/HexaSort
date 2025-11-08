@@ -118,7 +118,7 @@ public class Stack : MonoBehaviour, IDragAndDropable
                 if (hexIndex >= hexes.Count) return;
 
                 hexes[hexIndex].SetColor(colors[i]);
-                //hexes[hexIndex].SetColor(Color.blue);
+               // hexes[hexIndex].SetColor(Color.blue);
 
                 hexIndex++;
             }
@@ -135,7 +135,7 @@ public class Stack : MonoBehaviour, IDragAndDropable
 
     public void OnDrag(Vector3 position)
     {
-        TargetPosition = position;
+        TargetPosition = position + Vector3.forward * 0.5f;
         var nearestCell = grid.GetNearestCell(TargetPosition);
         if (nearestCell.Item1 != null && nearestCell.Item2)
         {
@@ -176,6 +176,7 @@ public class Stack : MonoBehaviour, IDragAndDropable
     
     public void OnStackPlaced()
     {
+        transform.SetParent(cell.transform);
         GameManager.Instance.CurrentLevel.CheckAllMatches();
     }
 
@@ -224,6 +225,7 @@ public class Stack : MonoBehaviour, IDragAndDropable
             {
                 item.ReturnToPool();
             });
+            GameManager.Instance.CurrentLevel.AddPoints(1);
             yield return new WaitForSeconds(0.5f / sortedHexes.Count);
         }
         Destroy(gameObject);

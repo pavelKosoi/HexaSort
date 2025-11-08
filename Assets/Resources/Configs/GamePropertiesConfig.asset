@@ -16,7 +16,7 @@ MonoBehaviour:
   defaultHexRadius: 0.5
   maxStackHeight: 12
   minStackHeight: 5
-  maxColorsInStack: 2
-  minColorsInStack: 1
+  maxColorsInStack: 3
+  minColorsInStack: 2
   stackTargetHeight: 15
   hexPrefab: {fileID: 3409067334823398297, guid: 44338c61a83fd234ca687d94a4fb642b, type: 3}

@@ -44,4 +44,10 @@ public class BaseHexCell : MonoBehaviour
     public virtual void SetSelectedColor() => SetColor(ConfigsManager.Instance.ColorsConfig.SelectedCellColor);
 
     protected virtual void SetColor(Color color) => hexView.SetColor(color);
+
+    [ContextMenu("DrawNeighbors")]
+    void DrawNeighbors()
+    {
+        GetComponentInParent<HexGrid>().GetNeighbors(this, true);
+    }
 }

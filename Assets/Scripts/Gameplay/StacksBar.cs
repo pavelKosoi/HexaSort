@@ -24,6 +24,15 @@ public class StacksBar : MonoBehaviour
         StartCoroutine(SpawnStacks());
     }
 
+    public void Clear()
+    {
+        foreach (var item in stacks)
+        {
+            Destroy(item.gameObject);
+        }
+        stacks.Clear();
+    }
+
     IEnumerator SpawnStacks()
     {
         for (int i = 0; i < 3; i++)

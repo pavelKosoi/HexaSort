@@ -6,7 +6,7 @@ public class StackPlacedState : BaseStackState
     public override void Enter()
     {
         GameManager.Instance.StacksBar.RemoveStack(stack);
-        stack.transform.DOMove(stack.PlacedPosition, 1f).SetEase(Ease.OutQuint).OnComplete(() =>
+        stack.transform.DOMove(stack.PlacedPosition, 0.5f).SetEase(Ease.OutQuint).OnComplete(() =>
         {
             stack.OnStackPlaced();
         });

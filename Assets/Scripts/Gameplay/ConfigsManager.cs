@@ -7,10 +7,12 @@ public class ConfigsManager : Singleton<ConfigsManager>
     #region Fields
     [SerializeField] GamePropertiesConfig gamePropertiesConfig;
     [SerializeField] ColorsConfig colorsConfig;
+    [SerializeField] LevelsConfig levelsConfig;
     #endregion
 
     #region Getters
     public GamePropertiesConfig GamePropertiesConfig => gamePropertiesConfig;
     public ColorsConfig ColorsConfig => colorsConfig;
+    public LevelsConfig LevelsConfig => levelsConfig;
     #endregion
 }

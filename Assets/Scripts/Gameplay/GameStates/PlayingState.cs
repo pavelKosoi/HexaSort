@@ -4,7 +4,8 @@ public class PlayingState : BaseGameState
 
     public override void Enter() 
     { 
-        gameManager.CurrentLevel.OnLevelComplete += HandleLevelComplete; gameManager.StacksBar.RefreshBar(); 
+        gameManager.CurrentLevel.OnLevelComplete += HandleLevelComplete; 
+        gameManager.StacksBar.RefreshBar(); 
     } 
     public override void Exit() 
     { 

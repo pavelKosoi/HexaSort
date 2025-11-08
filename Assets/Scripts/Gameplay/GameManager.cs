@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+using System;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
@@ -7,10 +7,21 @@ public class GameManager : Singleton<GameManager>
     #region Fields
     [SerializeField] StacksBar stacksBar;
     [SerializeField] HexStackAnimator animator;
+
+    public Action OnlevelLoadingSarted;
+    public Action OnlevelLoadingCompleted;
+
     #endregion
     #region Properties
     public StateMachine StateMachine { get; private set; }
     public Level CurrentLevel { get; private set; }
+    public LevelConfig CurrentLevelConfig { get; private set; }
+    public int CurrentLevelIndex
+    {
+        get => PlayerPrefs.GetInt("Level");
+        private set => PlayerPrefs.SetInt("Level", value);
+    }
+
     #endregion
 
     #region Getters
@@ -36,20 +47,25 @@ public class GameManager : Singleton<GameManager>
     #endregion
 
     #region GameManagement
-    public void OnLevelLoaded(Level level)
+    public void OnLevelLoaded(Level level, LevelConfig levelConfig)
     {
         CurrentLevel = level;
+        CurrentLevelConfig = levelConfig;
+        OnlevelLoadingCompleted?.Invoke();
         StateMachine.ChangeState<PlayingState>();
     }
 
     public void OnLevelCompleted()
     {
-
+        CurrentLevelIndex++;
+        stacksBar.Clear();
+        LoadNextLevel();
     }
 
     public void LoadNextLevel()
     {
         StateMachine.ChangeState<LoadingState>();
+        OnlevelLoadingSarted?.Invoke();
     }
     #endregion
 }

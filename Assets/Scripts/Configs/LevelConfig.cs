@@ -7,9 +7,11 @@ public class LevelConfig : ScriptableObject
 {
     #region Fields
     [SerializeField] float targetPoints;
+    [SerializeField] GameObject levelPrefab;
     #endregion
 
     #region Getters
     public float TargetPoints => targetPoints;
+    public GameObject LevelPrefab => levelPrefab;
     #endregion
 }
