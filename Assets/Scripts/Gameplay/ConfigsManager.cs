@@ -9,6 +9,7 @@ public class ConfigsManager : Singleton<ConfigsManager>
     [SerializeField] ColorsConfig colorsConfig;
     [SerializeField] LevelsConfig levelsConfig;
     [SerializeField] BoostersConfig boostersConfig;
+    [SerializeField] SoundsConfig soundsConfig;
     #endregion
 
     #region Getters
@@ -16,5 +17,6 @@ public class ConfigsManager : Singleton<ConfigsManager>
     public ColorsConfig ColorsConfig => colorsConfig;
     public LevelsConfig LevelsConfig => levelsConfig;
     public BoostersConfig BoostersConfig => boostersConfig;
+    public SoundsConfig SoundsConfig => soundsConfig;
     #endregion
 }

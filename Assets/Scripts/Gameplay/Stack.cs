@@ -211,6 +211,12 @@ public class Stack : MonoBehaviour, IDragAndDropable
             Destroy(gameObject);
         }       
     }
+
+    [ContextMenu("Pop")]
+    void ForcePop()
+    {
+        TryToPop(true);
+    }
     public void TryToPop(bool forceToPop = false)
     {
         if (forceToPop || (hexes.Count >= ConfigsManager.Instance.GamePropertiesConfig.StackTargetHeight
@@ -222,6 +228,7 @@ public class Stack : MonoBehaviour, IDragAndDropable
 
     IEnumerator PopStack()
     {
+        cell.OnStackPopped();
         cell.Vacate();
 
         var sortedHexes = hexes.OrderByDescending(h => h.transform.position.y).ToList();

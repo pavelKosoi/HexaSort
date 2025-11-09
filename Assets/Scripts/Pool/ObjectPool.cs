@@ -8,7 +8,9 @@ public class ObjectPool : Singleton<ObjectPool>
     public enum PoolObjectType
     {
         None,
-        Hex
+        Hex,
+        BombSign,
+        Explosion
     }
 
 

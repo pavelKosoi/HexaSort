@@ -18,12 +18,14 @@ public class BaseHexCell : MonoBehaviour
 
 
     #region UnityMethodes
-    private void Awake()
+    protected virtual void Awake()
     {
         hexView = GetComponentInChildren<HexView>();
     }
     #endregion
 
+    #region Management
+    public virtual void OnStackPopped() { }
 
     public void SetCoords(Vector2Int coordinates)
     {
@@ -50,4 +52,6 @@ public class BaseHexCell : MonoBehaviour
     {
         GetComponentInParent<HexGrid>().GetNeighbors(this, true);
     }
+    #endregion
+
 }

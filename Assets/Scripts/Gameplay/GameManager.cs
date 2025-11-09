@@ -11,6 +11,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] BoostersManager boosterManager;
     [SerializeField] CameraController cameraController;
     [SerializeField] InputManager inputManager;
+    [SerializeField] SoundsManager soundsManager;
 
     public Action OnlevelLoadingSarted;
     public Action OnlevelLoadingCompleted;
@@ -36,6 +37,7 @@ public class GameManager : Singleton<GameManager>
     public BoostersManager BoosterManager => boosterManager;
     public CameraController CameraController => cameraController;
     public InputManager InputManager => inputManager;
+    public SoundsManager SoundsManager => soundsManager;
     #endregion
 
     #region UnityMethodes

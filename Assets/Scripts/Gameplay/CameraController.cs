@@ -23,9 +23,17 @@ public class CameraController : MonoBehaviour
         public Transform point;
     }
 
+    #region Fields
     [SerializeField] CameraPoint[] points;
     [SerializeField] float moveCamTime;
     Camera mainCamera;
+    #endregion
+
+    #region Getters
+    public Camera MainCamera => mainCamera;
+
+    #endregion
+
     private void Awake()
     {
         mainCamera = Camera.main;

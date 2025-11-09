@@ -51,6 +51,8 @@ public class HexStackAnimator : MonoBehaviour
             bool isLast = (i == count - 1);
             hex.transform.SetParent(targetStack.transform);
 
+            GameManager.Instance.SoundsManager.PlaySoundOneShot(SoundType.Pop);
+
             var seq = DOTween.Sequence();
             seq.Append(hex.transform.DOPath(path, animationLength, PathType.CatmullRom).SetEase(Ease.Linear));
             seq.Join(hex.transform.DORotate(new Vector3(180, 0, 0), animationLength, RotateMode.LocalAxisAdd).SetEase(Ease.Linear))
