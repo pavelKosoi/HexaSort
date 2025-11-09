@@ -15,6 +15,7 @@ public class GamePropertiesConfig : ScriptableObject
     [SerializeField] int stackTargetHeight;
 
     [SerializeField] GameObject hexPrefab;
+    [SerializeField] Sprite lockIcon;
     #endregion
 
     #region Getters
@@ -26,5 +27,6 @@ public class GamePropertiesConfig : ScriptableObject
     public int MinColorsInStack => minColorsInStack;
     public int MaxColorsInStack => maxColorsInStack;
     public int StackTargetHeight => stackTargetHeight;
+    public Sprite LockIcon => lockIcon;
     #endregion
 }

@@ -1,42 +1,42 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    private Camera mainCamera;
-    private IDragAndDropable currentMovable;
+    #region Fields
+    StateMachine stateMachine;
+
+    public Action<Stack> OnStackPicked;
+    #endregion
+
+    #region Getters
+    public StateMachine StateMachine => stateMachine;
+    #endregion
+
+    #region Properties
+    public Camera MainCamera {  get; private set; }
+    #endregion
 
     void Awake()
     {
-        mainCamera = Camera.main;
+        MainCamera = Camera.main;
+        stateMachine = new StateMachine();
+
+        stateMachine.RegisterState(new DefaultInputState(this));
+        stateMachine.RegisterState(new StackPickingState(this));
+    }
+    private void Start()
+    {
+        stateMachine.ChangeState<DefaultInputState>();
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit))
-            {
-                if (hit.collider.TryGetComponent<IDragAndDropable>(out var movable))
-                {
-                    currentMovable = movable;
-                    movable.OnPick();
-                }
-            }
-        }
-        else if (Input.GetMouseButton(0) && currentMovable != null)
-        {
-            if (Utilities.TryGetMouseWorldPosition(mainCamera, out var targetPos))
-            {
-                currentMovable.OnDrag(targetPos);
-            }
-        }
+        stateMachine.Update();
+    }
 
-        else if (Input.GetMouseButtonUp(0) && currentMovable != null)
-        {
-
-            currentMovable.OnDrop();
-            currentMovable = null;
-        }
+    public void SetInputMode<T>() where T : BaseInputState
+    {
+        stateMachine.ChangeState<T>();
     }
 }

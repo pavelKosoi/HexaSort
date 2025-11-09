@@ -14,6 +14,8 @@ public class StateMachine
         states[typeof(T)] = state;
     }
 
+    public IState GetState<T>() where T : IState => states[typeof(T)];
+
     public void ChangeState<T>() where T : IState
     {
         if (states.TryGetValue(typeof(T), out var newState))

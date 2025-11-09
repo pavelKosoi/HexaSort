@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6de2bce0abbf5b745955ad1f3d915a29, type: 3}
   m_Name: GamePropertiesConfig
   m_EditorClassIdentifier: 
-  defaultHexThickness: 0.05
+  defaultHexThickness: 0.1
   defaultHexRadius: 0.5
-  maxStackHeight: 12
-  minStackHeight: 5
+  maxStackHeight: 7
+  minStackHeight: 3
   maxColorsInStack: 3
   minColorsInStack: 1
   stackTargetHeight: 10
   hexPrefab: {fileID: 3409067334823398297, guid: 44338c61a83fd234ca687d94a4fb642b, type: 3}
+  lockIcon: {fileID: 21300000, guid: 1ed9984ce90a04e40b55e356eec45d5c, type: 3}

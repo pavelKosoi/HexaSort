@@ -10,12 +10,16 @@ public class ColorsConfig : ScriptableObject
     [SerializeField] Color[] colors;
     [SerializeField] Color defaultCellColor;
     [SerializeField] Color selectedCellColor;
+    [SerializeField] Color defaultCameraBackgroundColor;
+    [SerializeField] Color boosterCameraBackgroundColor;
     #endregion
 
     #region Getters
     public Color[] Colors => colors;
     public Color DefaultCellColor => defaultCellColor;
     public Color SelectedCellColor => selectedCellColor;
+    public Color DefaultCameraBackgroundColor => defaultCameraBackgroundColor;
+    public Color BoosterCameraBackgroundColor => boosterCameraBackgroundColor;
     #endregion
 
     public Color[] GetRandomColors(int amount)

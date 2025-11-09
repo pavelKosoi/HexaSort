@@ -8,11 +8,15 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] StacksBar stacksBar;
     [SerializeField] HexStackAnimator animator;
     [SerializeField] MainUIManager mainUIManager;
+    [SerializeField] BoostersManager boosterManager;
+    [SerializeField] CameraController cameraController;
+    [SerializeField] InputManager inputManager;
 
     public Action OnlevelLoadingSarted;
     public Action OnlevelLoadingCompleted;
 
     #endregion
+
     #region Properties
     public StateMachine StateMachine { get; private set; }
     public Level CurrentLevel { get; private set; }
@@ -29,6 +33,9 @@ public class GameManager : Singleton<GameManager>
     public StacksBar StacksBar => stacksBar;
     public HexStackAnimator HexStackAnimator => animator;
     public MainUIManager MainUIManager => mainUIManager;
+    public BoostersManager BoosterManager => boosterManager;
+    public CameraController CameraController => cameraController;
+    public InputManager InputManager => inputManager;
     #endregion
 
     #region UnityMethodes

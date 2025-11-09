@@ -29,6 +29,8 @@ public class Stack : MonoBehaviour, IDragAndDropable
     #region Getters 
     public List<Hex> Hexes => hexes;
     public Color UpperColor => hexes[hexes.Count - 1].Color;
+    public IState CurrentState => stateMachine.CurrentState;
+
     HexGrid grid => GameManager.Instance.CurrentLevel.HexGrid;
     #endregion
 
@@ -132,6 +134,11 @@ public class Stack : MonoBehaviour, IDragAndDropable
         if (stateMachine.CurrentState is StackPlacedState) return;
         stateMachine.ChangeState<StackDraggingState>();
     }
+    public void ForceToPick()
+    {
+        cell.Vacate();
+        stateMachine.ChangeState<StackDraggingState>();
+    }
 
     public void OnDrag(Vector3 position)
     {
@@ -204,10 +211,10 @@ public class Stack : MonoBehaviour, IDragAndDropable
             Destroy(gameObject);
         }       
     }
-    public void TryToPop()
+    public void TryToPop(bool forceToPop = false)
     {
-        if (hexes.Count >= ConfigsManager.Instance.GamePropertiesConfig.StackTargetHeight
-            && hexes.All(h => h.Color == UpperColor))
+        if (forceToPop || (hexes.Count >= ConfigsManager.Instance.GamePropertiesConfig.StackTargetHeight
+            && hexes.All(h => h.Color == UpperColor)))
         {
             StartCoroutine(PopStack());
         }
