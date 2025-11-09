@@ -51,6 +51,14 @@ public class BoostersManager : MonoBehaviour
 
     private void Awake()
     {
+        foreach (var item in boostersConfig.Boosters)
+        {
+            if (!PlayerPrefs.HasKey(item.Type.ToString()))
+            {
+                PlayerPrefs.SetInt(item.Type.ToString(), 3);
+            }
+        }
+
         InitButtons();
     }
 
@@ -98,6 +106,19 @@ public class BoostersManager : MonoBehaviour
         }
 
         activeBooster.OnActivate();
+    }
+
+
+    public void OnBoosterUsed(BoosterType boosterType)
+    {
+        int currentAmount = PlayerPrefs.GetInt(boosterType.ToString());
+        if (currentAmount == 0) return;
+        PlayerPrefs.SetInt(boosterType.ToString(), currentAmount - 1);
+
+        foreach (var item in buttons)
+        {
+            item.UpdateCounter();
+        }
     }
 
     public void DeactivateBooster()

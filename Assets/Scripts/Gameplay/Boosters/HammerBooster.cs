@@ -19,5 +19,6 @@ public class HammerBooster : BoosterBase
         stack.TryToPop(true);
         GameManager.Instance.InputManager.OnStackPicked -= OnStackPicked;
         GameManager.Instance.BoosterManager.DeactivateBooster();
+        GameManager.Instance.BoosterManager.OnBoosterUsed(config.Type);
     }
 }

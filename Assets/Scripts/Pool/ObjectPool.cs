@@ -10,7 +10,8 @@ public class ObjectPool : Singleton<ObjectPool>
         None,
         Hex,
         BombSign,
-        Explosion
+        Explosion,
+        HexPopFx
     }
 
 

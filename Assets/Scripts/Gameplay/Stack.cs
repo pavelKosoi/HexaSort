@@ -30,7 +30,7 @@ public class Stack : MonoBehaviour, IDragAndDropable
     public List<Hex> Hexes => hexes;
     public Color UpperColor => hexes[hexes.Count - 1].Color;
     public IState CurrentState => stateMachine.CurrentState;
-
+    public BaseHexCell Cell => cell;
     HexGrid grid => GameManager.Instance.CurrentLevel.HexGrid;
     #endregion
 
@@ -212,11 +212,7 @@ public class Stack : MonoBehaviour, IDragAndDropable
         }       
     }
 
-    [ContextMenu("Pop")]
-    void ForcePop()
-    {
-        TryToPop(true);
-    }
+
     public void TryToPop(bool forceToPop = false)
     {
         if (forceToPop || (hexes.Count >= ConfigsManager.Instance.GamePropertiesConfig.StackTargetHeight
@@ -232,18 +228,33 @@ public class Stack : MonoBehaviour, IDragAndDropable
         cell.Vacate();
 
         var sortedHexes = hexes.OrderByDescending(h => h.transform.position.y).ToList();
+        var tweens = new List<Tween>();
+        var popVFX = ObjectPool.Instance.GetFromPool(ObjectPool.PoolObjectType.HexPopFx, transform.position) as PoolableVFX;
 
         foreach (var item in sortedHexes)
         {
-            item.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.OutQuint).OnComplete(() =>
-            {
-                item.ReturnToPool();
-            });
+            GameManager.Instance.SoundsManager.PlaySoundOneShot(SoundType.Pop1);
+            popVFX.transform.position = item.transform.position;
+            popVFX.Play();
+
+            var tween = item.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.OutQuint)
+           .OnComplete(() =>
+           {
+              
+               item.ReturnToPool();
+           });
+
+            tweens.Add(tween);
             GameManager.Instance.CurrentLevel.AddPoints(1);
+
             yield return new WaitForSeconds(0.5f / sortedHexes.Count);
         }
+
+        yield return new WaitUntil(() => tweens.TrueForAll(t => !t.IsActive()));
+        popVFX.ReturnToPool();
         Destroy(gameObject);
     }
+
 
     #endregion
 }

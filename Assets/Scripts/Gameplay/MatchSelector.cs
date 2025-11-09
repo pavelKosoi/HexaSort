@@ -21,23 +21,47 @@ public class MatchSelector
 
         if (neighbors.Count == 0) return null;
 
-        var bestPair = neighbors
-            .Select(neighbor =>
+        var possiblePairs = new List<(Stack from, Stack to)>();
+
+        foreach (var neighbor in neighbors)
+        {
+            int fromGroups = stack.GetColorGroupCount();
+            int toGroups = neighbor.GetColorGroupCount();
+
+            bool bothSingleColor = fromGroups == 1 && toGroups == 1;
+
+            if (bothSingleColor)
             {
-                int fromGroups = stack.GetColorGroupCount();
-                int toGroups = neighbor.GetColorGroupCount();
+                bool isStackBomb = stack.Cell is BombCell;
+                bool isNeighborBomb = neighbor.Cell is BombCell;
 
-                if (fromGroups == toGroups)
+                if (isStackBomb && !isNeighborBomb)
                 {
-                    fromGroups = stack.Hexes.Count;
-                    toGroups = neighbor.Hexes.Count;
+                    possiblePairs.Add((from: neighbor, to: stack));
+                    continue;
                 }
+                else if (!isStackBomb && isNeighborBomb)
+                {
+                    possiblePairs.Add((from: stack, to: neighbor));
+                    continue;
+                }
+            }
 
-                return fromGroups > toGroups ? (from: stack, to: neighbor) : (from: neighbor, to: stack);
+            if (fromGroups == toGroups)
+            {
+                fromGroups = stack.Hexes.Count;
+                toGroups = neighbor.Hexes.Count;
+            }
 
-            })
-            .OrderBy(pair => pair.to.GetColorGroupCount())
-            .ThenBy(pair => pair.to.Hexes.Count).FirstOrDefault();
+            var pair = fromGroups > toGroups ? (from: stack, to: neighbor) : (from: neighbor, to: stack);
+            possiblePairs.Add(pair);
+        }
+
+        if (possiblePairs.Count == 0) return null;
+
+
+        var bestPair = possiblePairs.OrderBy(pair => pair.to.GetColorGroupCount())
+            .ThenBy(pair => pair.to.Hexes.Count).First();
 
         return bestPair;
     }

@@ -25,5 +25,6 @@ public class HandBooster : BoosterBase
         stack.ForceToPick();
         GameManager.Instance.InputManager.OnStackPicked -= OnStackPicked;
         GameManager.Instance.BoosterManager.DeactivateBooster();
+        GameManager.Instance.BoosterManager.OnBoosterUsed(config.Type);
     }    
 }

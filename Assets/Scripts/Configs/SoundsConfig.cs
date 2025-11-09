@@ -41,5 +41,6 @@ public class SoundsConfig : ScriptableObject
 public enum SoundType
 {
     None,
-    Pop
+    Pop,
+    Pop1
 }

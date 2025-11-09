@@ -29,7 +29,7 @@ public class BoosterButton : MonoBehaviour
             (icon.transform as RectTransform).anchoredPosition = new Vector2(0, 50);
             (icon.transform as RectTransform).sizeDelta = boosterConfig.IconSize;
             countTxt.gameObject.SetActive(true);
-            countTxt.text = "1";
+            UpdateCounter();
         }
         else
         {
@@ -39,6 +39,14 @@ public class BoosterButton : MonoBehaviour
             countTxt.gameObject.SetActive(false);
         }
         button.interactable = !locked;
+    }
+
+    public void UpdateCounter()
+    {
+        if(boosterConfig == null) return;
+        int currentAmount = PlayerPrefs.GetInt(boosterConfig.Type.ToString());
+        countTxt.text = currentAmount.ToString();
+        if (currentAmount == 0) SetLock(true);
     }
 
     private void OnClick()

@@ -1167,6 +1167,10 @@ MonoBehaviour:
     Prefab: {fileID: 5277721686297570459, guid: 1bafa3c4aa603af429b2e2bffa919bd0, type: 3}
     InitialSize: 1
     DefaultParent: {fileID: 0}
+  - Key: 4
+    Prefab: {fileID: 4401419921567717518, guid: b617ec2f9ccc1f54da508001f91198fb, type: 3}
+    InitialSize: 5
+    DefaultParent: {fileID: 0}
 --- !u!4 &708704797
 Transform:
   m_ObjectHideFlags: 0
