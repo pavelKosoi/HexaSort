@@ -7,6 +7,7 @@ public class GameManager : Singleton<GameManager>
     #region Fields
     [SerializeField] StacksBar stacksBar;
     [SerializeField] HexStackAnimator animator;
+    [SerializeField] MainUIManager mainUIManager;
 
     public Action OnlevelLoadingSarted;
     public Action OnlevelLoadingCompleted;
@@ -27,6 +28,7 @@ public class GameManager : Singleton<GameManager>
     #region Getters
     public StacksBar StacksBar => stacksBar;
     public HexStackAnimator HexStackAnimator => animator;
+    public MainUIManager MainUIManager => mainUIManager;
     #endregion
 
     #region UnityMethodes
@@ -57,12 +59,16 @@ public class GameManager : Singleton<GameManager>
 
     public void OnLevelCompleted()
     {
-        CurrentLevelIndex++;
-        stacksBar.Clear();
-        LoadNextLevel();
+        CurrentLevelIndex++;        
     }
 
-    public void LoadNextLevel()
+    public void MoveToNextLevel()
+    {
+        stacksBar.Clear();
+        LoadNextLevel();
+    }  
+
+    void LoadNextLevel()
     {
         StateMachine.ChangeState<LoadingState>();
         OnlevelLoadingSarted?.Invoke();

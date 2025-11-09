@@ -19,7 +19,7 @@ public class Level : MonoBehaviour
 
     #region Properties
     public HexGrid HexGrid {  get; private set; }
-
+    public bool IsCompleted { get; private set; }
     #endregion
 
     #region UnityMethodes
@@ -35,12 +35,24 @@ public class Level : MonoBehaviour
 
     public void AddPoints(int amount)
     {
+        if (IsCompleted) return;
         points += amount;
         OnLevelProgressChanged?.Invoke(points);
         if (points >= GameManager.Instance.CurrentLevelConfig.TargetPoints)
         {
-            OnLevelComplete?.Invoke();
+            LevelComplete();
         }
+    }
+
+    void LevelComplete()
+    {
+        IsCompleted = true;
+        OnLevelComplete?.Invoke();
+    }
+    void LevelFailed()
+    {
+        IsCompleted = true;
+        OnLevelFailed?.Invoke();
     }
 
     #endregion
@@ -95,10 +107,7 @@ public class Level : MonoBehaviour
 
         } while (hasMatches);
 
-        if (HexGrid.AllCellsFilled)
-        {            
-            OnLevelFailed?.Invoke();
-        }
+        if (HexGrid.AllCellsFilled) LevelFailed();       
 
         matchRoutine = null;
     }

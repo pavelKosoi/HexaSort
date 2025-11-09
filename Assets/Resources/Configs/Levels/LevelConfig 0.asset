@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad0188d9b999bee4e8b40127fcbaac57, type: 3}
   m_Name: LevelConfig 0
   m_EditorClassIdentifier: 
-  targetPoints: 20
+  targetPoints: 30
   levelPrefab: {fileID: 8267683644120674139, guid: f2ea838f707e5334b8f9c0a07da3b34f, type: 3}
