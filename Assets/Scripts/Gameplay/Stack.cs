@@ -42,6 +42,7 @@ public class Stack : MonoBehaviour, IDragAndDropable
         stateMachine.RegisterState(new StackDraggingState(this));
         stateMachine.RegisterState(new StackPlacedState(this));
         stateMachine.RegisterState(new StackIdleState(this));
+        stateMachine.RegisterState(new StackPopingState(this));
     }
 
     private void Start()
@@ -201,8 +202,6 @@ public class Stack : MonoBehaviour, IDragAndDropable
         return groups;
     }
 
-
-
     public void TryToDestroy()
     {
         if (hexes.Count == 0)
@@ -218,43 +217,9 @@ public class Stack : MonoBehaviour, IDragAndDropable
         if (forceToPop || (hexes.Count >= ConfigsManager.Instance.GamePropertiesConfig.StackTargetHeight
             && hexes.All(h => h.Color == UpperColor)))
         {
-            StartCoroutine(PopStack());
+            stateMachine.ChangeState<StackPopingState>();            
         }
     }
-
-    IEnumerator PopStack()
-    {
-        cell.OnStackPopped();
-        cell.Vacate();
-
-        var sortedHexes = hexes.OrderByDescending(h => h.transform.position.y).ToList();
-        var tweens = new List<Tween>();
-        var popVFX = ObjectPool.Instance.GetFromPool(ObjectPool.PoolObjectType.HexPopFx, transform.position) as PoolableVFX;
-
-        foreach (var item in sortedHexes)
-        {
-            GameManager.Instance.SoundsManager.PlaySoundOneShot(SoundType.Pop1);
-            popVFX.transform.position = item.transform.position;
-            popVFX.Play();
-
-            var tween = item.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.OutQuint)
-           .OnComplete(() =>
-           {
-              
-               item.ReturnToPool();
-           });
-
-            tweens.Add(tween);
-            GameManager.Instance.CurrentLevel.AddPoints(1);
-
-            yield return new WaitForSeconds(0.5f / sortedHexes.Count);
-        }
-
-        yield return new WaitUntil(() => tweens.TrueForAll(t => !t.IsActive()));
-        popVFX.ReturnToPool();
-        Destroy(gameObject);
-    }
-
-
+  
     #endregion
 }
