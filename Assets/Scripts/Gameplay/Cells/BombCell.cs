@@ -45,6 +45,11 @@ public class BombCell : BaseHexCell
             }
             exploded = true;
             bomb.ReturnToPool();
+            bomb = null;    
         }         
+    }
+    private void OnDestroy()
+    {
+        if(bomb) bomb.ReturnToPool();
     }
 }

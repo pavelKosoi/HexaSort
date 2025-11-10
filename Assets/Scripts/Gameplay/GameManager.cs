@@ -12,6 +12,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] CameraController cameraController;
     [SerializeField] InputManager inputManager;
     [SerializeField] SoundsManager soundsManager;
+    [SerializeField] FeedbackManager feedbackManager;
 
     public Action OnlevelLoadingSarted;
     public Action OnlevelLoadingCompleted;
@@ -38,9 +39,15 @@ public class GameManager : Singleton<GameManager>
     public CameraController CameraController => cameraController;
     public InputManager InputManager => inputManager;
     public SoundsManager SoundsManager => soundsManager;
+    public FeedbackManager FeedbackManager => feedbackManager;
     #endregion
 
     #region UnityMethodes
+    protected override void Awake()
+    {
+        base.Awake();
+        Application.targetFrameRate = 60;
+    }
     private void Start()
     {
         StateMachine = new StateMachine();

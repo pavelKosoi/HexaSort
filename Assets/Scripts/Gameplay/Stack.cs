@@ -163,15 +163,24 @@ public class Stack : MonoBehaviour, IDragAndDropable
 
     public void OnDrop()
     {
-        var nearestCell = grid.GetNearestCell(TargetPosition);
-        if (nearestCell.Item1 != null)
+        var result = grid.GetNearestCell(TargetPosition);
+        var nearestCell = result.Item1;
+        bool isIinsdeOfCell = result.Item2;
+
+        if (cell != null)
         {
-            if (nearestCell.Item2 && !nearestCell.Item1.IsOccupied)
+            nearestCell = cell;
+            isIinsdeOfCell = true;
+        }
+        if (nearestCell != null)
+        {
+            if (isIinsdeOfCell && !nearestCell.IsOccupied)
             {               
-                PlacedPosition = nearestCell.Item1.transform.position + Vector3.up * ConfigsManager.Instance.GamePropertiesConfig.DefaultHexThickness;
-                cell = nearestCell.Item1;
-                nearestCell.Item1.Occupy(this);
-                nearestCell.Item1.SetDefaultColor();
+                PlacedPosition = nearestCell.transform.position + Vector3.up * ConfigsManager.Instance.GamePropertiesConfig.DefaultHexThickness;
+                IdlePosition = PlacedPosition;
+                cell = nearestCell;
+                nearestCell.Occupy(this);
+                nearestCell.SetDefaultColor();
                 stateMachine.ChangeState<StackPlacedState>();
             }
             else stateMachine.ChangeState<StackIdleState>();

@@ -21,6 +21,9 @@ public class StackPickingState : BaseInputState
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
                 return;
 
+            if (Input.touchCount > 0 && EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+                return;
+
             Ray ray = inputManager.MainCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {

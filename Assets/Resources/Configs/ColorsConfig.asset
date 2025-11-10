@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colors:
   - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 1, g: 0.5615011, b: 0, a: 1}
-  - {r: 1, g: 0.84019786, b: 0, a: 1}
-  - {r: 0.061599493, g: 1, b: 0, a: 1}
-  - {r: 0, g: 0.950006, b: 1, a: 1}
-  - {r: 0, g: 0.036186695, b: 1, a: 1}
-  - {r: 0.6109066, g: 0, b: 1, a: 1}
-  defaultCellColor: {r: 0.6901961, g: 0.6901961, b: 0.6901961, a: 1}
+  - {r: 1, g: 0.20392157, b: 0.42352942, a: 1}
+  - {r: 1, g: 0.6393204, b: 0.18396229, a: 1}
+  - {r: 1, g: 0.87031084, b: 0.19339621, a: 1}
+  - {r: 0.21748056, g: 1, b: 0.16509432, a: 1}
+  - {r: 0.23113209, g: 0.96080303, b: 1, a: 1}
+  - {r: 0.2028302, g: 0.23096555, b: 1, a: 1}
+  - {r: 0.69417334, g: 0.21226418, b: 1, a: 1}
+  defaultCellColor: {r: 0.6784314, g: 0.65882355, b: 0.6784314, a: 1}
   selectedCellColor: {r: 1, g: 1, b: 1, a: 1}
-  defaultCameraBackgroundColor: {r: 0.67058825, g: 0.67058825, b: 0.67058825, a: 0}
-  boosterCameraBackgroundColor: {r: 0.2735849, g: 0.2735849, b: 0.2735849, a: 1}
+  defaultCameraBackgroundColor: {r: 0.8235295, g: 0.8235295, b: 0.8235295, a: 1}
+  boosterCameraBackgroundColor: {r: 0.37647063, g: 0.37647063, b: 0.37647063, a: 1}
