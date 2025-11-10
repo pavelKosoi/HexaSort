@@ -121,7 +121,7 @@ public class Stack : MonoBehaviour, IDragAndDropable
                 if (hexIndex >= hexes.Count) return;
 
                 hexes[hexIndex].SetColor(colors[i]);
-               // hexes[hexIndex].SetColor(Color.blue);
+                //hexes[hexIndex].SetColor(Color.blue);
 
                 hexIndex++;
             }

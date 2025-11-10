@@ -19,8 +19,7 @@ public class StackPlacedState : BaseStackState
         GameManager.Instance.StacksBar.RemoveStack(stack);
         stack.transform.DOMove(stack.PlacedPosition, duration).SetEase(Ease.OutQuint).OnComplete(() =>
         {
-            GameManager.Instance.FeedbackManager.Shake(stack.transform, 1.2f, 0.2f);
-            stack.OnStackPlaced();
+            GameManager.Instance.FeedbackManager.Shake(stack.transform, 1.2f, 0.2f, stack.OnStackPlaced);
         });
     }
 }

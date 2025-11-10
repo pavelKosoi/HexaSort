@@ -50,6 +50,7 @@ public class HexStackAnimator : MonoBehaviour
 
             bool isLast = (i == count - 1);
             hex.transform.SetParent(targetStack.transform);
+            hex.transform.localScale = Vector3.one;
 
             GameManager.Instance.SoundsManager.PlaySoundOneShot(SoundType.Pop);
 
