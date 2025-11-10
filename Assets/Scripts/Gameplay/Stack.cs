@@ -130,10 +130,11 @@ public class Stack : MonoBehaviour, IDragAndDropable
     #endregion
 
     #region Moving
-    public void OnPick()
+    public bool OnPick()
     {
-        if (stateMachine.CurrentState is StackPlacedState) return;
+        if (stateMachine.CurrentState is StackPlacedState) return false;
         stateMachine.ChangeState<StackDraggingState>();
+        return true;
     }
     public void ForceToPick()
     {
@@ -163,19 +164,19 @@ public class Stack : MonoBehaviour, IDragAndDropable
 
     public void OnDrop()
     {
-        var result = grid.GetNearestCell(TargetPosition);
+        TryToOccupateCell(TargetPosition);
+    }    
+
+    public void TryToOccupateCell(Vector3 postion)
+    {
+        var result = grid.GetNearestCell(postion);
         var nearestCell = result.Item1;
         bool isIinsdeOfCell = result.Item2;
 
-        if (cell != null)
-        {
-            nearestCell = cell;
-            isIinsdeOfCell = true;
-        }
         if (nearestCell != null)
         {
             if (isIinsdeOfCell && !nearestCell.IsOccupied)
-            {               
+            {
                 PlacedPosition = nearestCell.transform.position + Vector3.up * ConfigsManager.Instance.GamePropertiesConfig.DefaultHexThickness;
                 IdlePosition = PlacedPosition;
                 cell = nearestCell;
@@ -184,12 +185,12 @@ public class Stack : MonoBehaviour, IDragAndDropable
                 stateMachine.ChangeState<StackPlacedState>();
             }
             else stateMachine.ChangeState<StackIdleState>();
-        }        
+        }
         else stateMachine.ChangeState<StackIdleState>();
 
         TargetPosition = Vector3.zero;
         lastSelectedCell = null;
-    }    
+    }
     
     public void OnStackPlaced()
     {

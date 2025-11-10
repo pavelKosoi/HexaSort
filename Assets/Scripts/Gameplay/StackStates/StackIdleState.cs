@@ -23,6 +23,7 @@ public class StackIdleState : BaseStackState
         {
             firstTime = false;
             GameManager.Instance.FeedbackManager.Shake(stack.transform, 1.2f, 0.2f);
+            stack.TryToOccupateCell(targetPos);
         });
 
 

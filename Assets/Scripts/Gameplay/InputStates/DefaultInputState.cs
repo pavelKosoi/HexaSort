@@ -33,8 +33,7 @@ public class DefaultInputState : BaseInputState
             {
                 if (hit.collider.TryGetComponent<IDragAndDropable>(out var movable))
                 {
-                    currentMovable = movable;
-                    movable.OnPick();
+                    if(movable.OnPick()) currentMovable = movable;
                 }
             }
         }

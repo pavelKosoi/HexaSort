@@ -2,7 +2,7 @@ using UnityEngine;
 
 public interface IDragAndDropable
 {
-    void OnPick();
+    bool OnPick();
     void OnDrag(Vector3 position);
     void OnDrop();   
     

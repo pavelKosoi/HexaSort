@@ -24,4 +24,9 @@ public class Hex : Poolable
         transform.localScale = Vector3.one;
         base.ReturnToPool();
     }
+    public override void OnTakenFromPool()
+    {
+        base.OnTakenFromPool();
+        transform.localScale = Vector3.one;
+    }
 }
