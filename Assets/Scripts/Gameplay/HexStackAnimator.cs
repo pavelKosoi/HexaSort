@@ -1,4 +1,4 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -39,7 +39,7 @@ public class HexStackAnimator : MonoBehaviour
         {
             var hex = hexes[i];
             var startPos = hex.transform.position;
-            var endPos = highestHex.position + Vector3.up * hexThickness * i;
+            var endPos = highestHex.position + Vector3.up * hexThickness * (i+1);
 
             var dir = endPos - startPos;
             dir.y = 0;
@@ -55,10 +55,11 @@ public class HexStackAnimator : MonoBehaviour
             GameManager.Instance.SoundsManager.PlaySoundOneShot(SoundType.Pop);
 
             var seq = DOTween.Sequence();
-            seq.Append(hex.transform.DOPath(path, animationLength, PathType.CatmullRom).SetEase(Ease.Linear));
-            seq.Join(hex.transform.DORotate(new Vector3(180, 0, 0), animationLength, RotateMode.LocalAxisAdd).SetEase(Ease.Linear))
+            seq.Append(hex.transform.DOPath(path, animationLength, PathType.CatmullRom).SetEase(Ease.Linear));            
+            seq.Join(hex.transform.DOLocalRotate(new Vector3(180, 0, 0), animationLength, RotateMode.LocalAxisAdd).SetEase(Ease.Linear))
                .OnComplete(() =>
                {
+                   hex.transform.localEulerAngles = Vector3.zero;
                    if (isLast)
                    {
                        info.from.Hexes.RemoveAll(h => info.hexes.Contains(h));

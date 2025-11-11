@@ -103,6 +103,12 @@ public class BoostersManager : MonoBehaviour
             case BoosterType.Hand:
                 activeBooster = new HandBooster(config);
                 break;
+            case BoosterType.Chamelion:
+                activeBooster = new ChamelionBooster(config);
+                break;
+            case BoosterType.Magnet:
+                activeBooster = new MagnetBooster(config);
+                break;
             default:
                 Debug.LogWarning("Unknown booster type");
                 return;

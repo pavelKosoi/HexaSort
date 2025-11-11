@@ -2,18 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HandBooster : BoosterBase
+public class HandBooster : StackPickingUseBoosters
 {
     public HandBooster(BoosterConfig config) : base(config) { }    
-
-    public override void OnActivate()
-    {
-        GameManager.Instance.InputManager.OnStackPicked += OnStackPicked;
-    }
-    public override void OnCancel()
-    {
-        GameManager.Instance.InputManager.OnStackPicked -= OnStackPicked;
-    }
+  
     public override void OnStackPicked(Stack stack)
     {
         if (stack.CurrentState is not StackPlacedState) return;

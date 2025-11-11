@@ -24,5 +24,7 @@ public class BoosterConfig : ScriptableObject
 public enum BoosterType
 {
     Hammer,
-    Hand
+    Hand,
+    Chamelion,
+    Magnet
 }

@@ -212,6 +212,18 @@ public class Stack : MonoBehaviour, IDragAndDropable
         return groups;
     }
 
+    public int GetSameTopColorCount(Color color)
+    {
+        if (hexes.Count == 0) return 0;        
+        int count = 0;
+        for (int i = hexes.Count - 1; i >= 0; i--)
+        {
+            if (hexes[i].Color == color) count++;
+            else break;
+        }
+        return count;
+    }    
+
     public void TryToDestroy()
     {
         if (hexes.Count == 0)
