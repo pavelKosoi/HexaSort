@@ -12,12 +12,18 @@ public class StacksBar : MonoBehaviour
     [SerializeField] GameObject stackPrefab;
 
     List<Stack> stacks = new List<Stack>();
-    
+    Camera mainCamera;
+
     #endregion
 
     #region Getters
     public List<Stack> Stacks => stacks;
     #endregion
+
+    private void Awake()
+    {
+        mainCamera = Camera.main;
+    }
 
     public void RefreshBar()
     {
@@ -37,7 +43,8 @@ public class StacksBar : MonoBehaviour
     {
         for (int i = 0; i < 3; i++)
         {
-            var spawnPoint = stackPoints.OrderBy(p => p.position.x).FirstOrDefault().position + Vector3.right * 10f;
+            Vector3 screenRightEdge = mainCamera.ViewportToWorldPoint(new Vector3(1, 0.5f, mainCamera.nearClipPlane));
+            var spawnPoint = new Vector3(screenRightEdge.x + 2f, transform.position.y, transform.position.z);
             var stack = Instantiate(stackPrefab, spawnPoint, Quaternion.identity).GetComponent<Stack>();
             stack.Build();
             stacks.Add(stack);
