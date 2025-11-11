@@ -83,15 +83,8 @@ public class BoostersManager : MonoBehaviour
             if (activeBooster.Config.Type == config.Type) return;
             activeBooster.OnCancel();
             activeBooster = null;
-        }
-        else
-        {
-            GameManager.Instance.CameraController.MoveCamera(CameraController.CameraPointType.Booster);
-            GameManager.Instance.CameraController.SetBackgroundColor(ConfigsManager.Instance.ColorsConfig.BoosterCameraBackgroundColor);
-            GameManager.Instance.InputManager.SetInputMode<StackPickingState>();
-        }
+        }      
 
-        GameManager.Instance.InputManager.OnStackPicked = null;
 
         boosterInfoPopUp.Activate(true, config);
               
@@ -132,12 +125,7 @@ public class BoostersManager : MonoBehaviour
 
     public void DeactivateBooster()
     {
-        boosterInfoPopUp.Activate(false);
-        GameManager.Instance.CameraController.MoveCamera(CameraController.CameraPointType.Default);
-        GameManager.Instance.CameraController.SetBackgroundColor(ConfigsManager.Instance.ColorsConfig.DefaultCameraBackgroundColor);
-        GameManager.Instance.InputManager.SetInputMode<DefaultInputState>();
-
-        GameManager.Instance.InputManager.OnStackPicked = null;
+        boosterInfoPopUp.Activate(false);      
 
         activeBooster?.OnDeactivate();
         activeBooster = null;

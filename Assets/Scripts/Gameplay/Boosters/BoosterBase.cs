@@ -14,6 +14,5 @@ public abstract class BoosterBase
     public abstract void OnActivate();
     public abstract void OnStackPicked(Stack stack);
     public virtual void OnCancel() { }
-
     public virtual void OnDeactivate() { }    
 }

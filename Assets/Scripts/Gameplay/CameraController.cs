@@ -13,7 +13,7 @@ public class CameraController : MonoBehaviour
     {
         None,
         Default,
-        Booster
+        StackPicking
     }
 
     [Serializable]
@@ -26,7 +26,10 @@ public class CameraController : MonoBehaviour
     #region Fields
     [SerializeField] CameraPoint[] points;
     [SerializeField] float moveCamTime;
+
     Camera mainCamera;
+    CameraPointType currentPointType;
+    Color currentBackGroundColor;
     #endregion
 
     #region Getters
@@ -37,12 +40,15 @@ public class CameraController : MonoBehaviour
     private void Awake()
     {
         mainCamera = Camera.main;
+        currentBackGroundColor = mainCamera.backgroundColor;
     }
 
     public void MoveCamera(CameraPointType cameraPoint, Action onComplete = null)
     {
+        if (currentPointType == cameraPoint) return;
         if (PointByType(cameraPoint, out var point))
         {
+            currentPointType = cameraPoint;
             var seq = DOTween.Sequence();
             seq.Append(mainCamera.transform.DOMove(point.point.position, moveCamTime).SetEase(Ease.Linear));
             seq.Join(mainCamera.transform.DORotateQuaternion(point.point.rotation, moveCamTime).SetEase(Ease.Linear));
@@ -56,6 +62,8 @@ public class CameraController : MonoBehaviour
 
     public void SetBackgroundColor(Color color)
     {
+        if (currentBackGroundColor == color) return;
+        currentBackGroundColor = color;
         mainCamera.DOColor(color, moveCamTime).SetEase(Ease.Linear);
     }
 }
